@@ -1,0 +1,153 @@
+package Etapa3;
+import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.List;
+public class D26004C {
+    // Função: Organizar o código de produto e a quantidade de vendas de uma loja do dia todo.
+    // Autora: Alice lacerda.
+    public static void main(String[] args) {
+        // Declarando variaveis.
+        List <Integer> codigos = new ArrayList<Integer>();
+        List <Integer> quantidadeVendidas = new ArrayList<Integer>();
+        String [] ordemStr = {"Código", "Quantidade de produto"};
+        String [] confirmacao = {"Sim", "Não"};
+        String codigoStr, quantidadeVendidaStr, mensagem = "";
+        int codigo, quantidadeVendida, posicao = -1, ordem, temporario, verificador;
+        // Criando loop para gerar o algorítmo.
+        do {
+            // Loop para coletar dados.
+            do {
+                // Coletando codigo e testando flag.
+                codigoStr = JOptionPane.showInputDialog(null,
+                        "Qual o código do produto(digite 0 para terminar o dia)? ",
+                        "Vendas do seu zé",
+                        JOptionPane.QUESTION_MESSAGE);
+                codigoStr = codigoStr.trim();
+                if (codigoStr.equalsIgnoreCase("0")){
+                    break;
+                }
+                // salvando código.
+                codigo = Integer.valueOf(codigoStr);
+                posicao = codigos.indexOf(codigo);
+                if (posicao == -1){
+                    codigos.add(codigo);
+                }
+                // Coletando quantidade de produtos.
+                quantidadeVendidaStr = JOptionPane.showInputDialog(null,
+                        "Quantos produtos foram vendidos? ",
+                        "Vendas do seu zé",
+                        JOptionPane.QUESTION_MESSAGE);
+                quantidadeVendidaStr = quantidadeVendidaStr.trim();
+                quantidadeVendida = Integer.valueOf(quantidadeVendidaStr);
+                // Validando quantidade vendida.
+                if (quantidadeVendida <= 0){
+                    do {
+                        quantidadeVendidaStr = JOptionPane.showInputDialog(null,
+                                "Quantos produtos foram vendidos, fale um valor maior que zero? ",
+                                "Vendas do seu zé",
+                                JOptionPane.QUESTION_MESSAGE);
+                        quantidadeVendidaStr = quantidadeVendidaStr.trim();
+                        quantidadeVendida = Integer.valueOf(quantidadeVendidaStr);
+                    } while (quantidadeVendida <= 0);
+                }
+                if (posicao == -1){
+                    quantidadeVendidas.add(quantidadeVendida);
+                }
+                else {
+                    quantidadeVendidas.set(posicao,(quantidadeVendida + quantidadeVendidas.get(posicao)));
+                }
+            } while (!codigoStr.equalsIgnoreCase("0"));
+            // Perguntando em que ordem quer os produtos.
+            ordem = JOptionPane.showOptionDialog(null,
+                    "Você quer que a lista esteja em ordem crescente referente a que? ",
+                    "Vendas do seu zé",
+                    0,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    ordemStr,
+                    "Código");
+            // Colocando ordem crescente.
+            if (ordem == 0){
+                for (int numero = codigos.size() - 2; numero >= 0; numero--){
+                    for (int numero2 = 0; numero2 <= numero; numero2++){
+                        if (codigos.get(numero2) < codigos.get(numero2 + 1)){
+                            temporario = codigos.get(numero2 + 1);
+                            codigos.set(numero2 + 1, codigos.get(numero2));
+                            codigos.set(numero2, temporario);
+                            temporario = quantidadeVendidas.get(numero2 + 1);
+                            quantidadeVendidas.set(numero2 + 1, quantidadeVendidas.get(numero2));
+                            quantidadeVendidas.set(numero2, temporario);
+                        }
+                    }
+                }
+            }
+            else {
+                for (int numero = codigos.size() - 2; numero >= 0; numero--){
+                    for (int numero2 = 0; numero2 <= numero; numero2++){
+                        if (quantidadeVendidas.get(numero2) < quantidadeVendidas.get(numero2 + 1)){
+                            temporario = codigos.get(numero2 + 1);
+                            codigos.set(numero2 + 1, codigos.get(numero2));
+                            codigos.set(numero2, temporario);
+                            temporario = quantidadeVendidas.get(numero2 + 1);
+                            quantidadeVendidas.set(numero2 + 1, quantidadeVendidas.get(numero2));
+                            quantidadeVendidas.set(numero2, temporario);
+                        }
+                    }
+                }
+            }
+            // loop para remover itens
+            do {
+                // Perguntando qual item dever ser removido.
+                codigoStr = JOptionPane.showInputDialog(null,
+                        "Qual o código você quer remover? ",
+                        "Vendas do seu zé",
+                        JOptionPane.QUESTION_MESSAGE);
+                codigoStr = codigoStr.trim();
+                // Pesquisando código.
+                codigo = Integer.valueOf(codigoStr);
+                posicao = codigos.indexOf(codigo);
+                if (posicao == -1){
+                    JOptionPane.showMessageDialog(null,
+                            "Já não há esse item.",
+                            "Vendas do seu zé",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+                else {
+                    codigos.remove(posicao);
+                    quantidadeVendidas.remove(posicao);
+                    JOptionPane.showMessageDialog(null,
+                            "Item removido",
+                            "Vendas do seu zé",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+                // Perguntando se quer remover outros itens.
+                verificador = JOptionPane.showOptionDialog(null,
+                        "Quer remover outro item? ",
+                        "Vendas do seu zé",
+                        0,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        confirmacao,
+                        "Sim");
+            } while (verificador != 1);
+            // Criando mensagem.
+            for (int numero3 = 0; numero3 <= codigos.size() - 1; numero3++){
+                mensagem += codigos.get(numero3) + "      ->       " + quantidadeVendidas.get(numero3) + "\n";
+            }
+            // Saída de dados.
+            JOptionPane.showMessageDialog(null,
+                    "Códigos: Quantidade vendida: \n" + mensagem,
+                    "Vendas do seu zé",
+                    JOptionPane.INFORMATION_MESSAGE);
+            // Vendo se quer iniciar outro dia.
+            verificador = JOptionPane.showOptionDialog(null,
+                    "Quer começar um novo dia? ",
+                    "Vendas do seu zé",
+                    0,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    confirmacao,
+                    "Sim");
+        } while (verificador != 1);
+    }
+}
